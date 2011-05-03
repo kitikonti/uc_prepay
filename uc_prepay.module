@@ -1,0 +1,45 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Provides the prepay payment method.
+ */
+
+/**
+ * Implementation of hook_payment_method().
+ */
+function uc_prepay_payment_method() {
+  $methods[] = array(
+    'id' => 'prepay',
+    'name' => t('Prepay'),
+    'title' => t('Prepay'),
+    'desc' => t('After receipt of the payment, your order will be processed.'),
+    'callback' => 'uc_payment_method_prepay',
+    'weight' => 1,
+    'checkout' => FALSE,
+    'no_gateway' => TRUE,
+  );
+
+  return $methods;
+}
+
+/**
+ * Handle the prepay payment method.
+ */
+function uc_payment_method_prepay($op, &$arg1) {
+  switch ($op) {
+    case 'cart-details':
+      $details = variable_get('uc_prepay_policy', t('Please pay using the invoice you will receive via email. After receipt of the payment, your order will be processed.'));
+      return $details;
+
+    case 'settings':
+      $form['uc_prepay_policy'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Policy message'),
+        '#default_value' => variable_get('uc_prepay_policy', t('Please pay using the invoice you will receive via email. After receipt of the payment, your order will be processed.')),
+        '#description' => t('Help message shown at checkout.'),
+      );
+      return $form;
+  }
+}

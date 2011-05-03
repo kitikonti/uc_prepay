@@ -1,0 +1,9 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function uc_prepay_uninstall() {
+  variable_del('uc_prepay_policy');
+}
